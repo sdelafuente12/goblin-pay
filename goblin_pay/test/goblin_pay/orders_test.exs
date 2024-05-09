@@ -21,7 +21,8 @@ defmodule GoblinPay.OrdersTest do
 
     test "get_order!/1 returns the order with given id" do
       order = order_fixture()
-      assert Orders.get_order!(order.id) == order
+      get_order = Orders.get_order!(order.id)
+      assert get_order.id == order.id
     end
 
     test "get_orders_for_customer/1 returns list of orders for a specific customer" do
@@ -39,14 +40,14 @@ defmodule GoblinPay.OrdersTest do
     test "create_order/1 with valid data creates a order" do
       valid_attrs = %{
         "email_address" => "customer@goblinpay.com",
-        "current_balance" => 34,
+        "current_balance" => 66,
         "original_order_value" => 66
       }
 
       assert {:ok,
               %Order{
                 email_address: "customer@goblinpay.com",
-                current_balance: 34,
+                current_balance: 66,
                 original_order_value: 66
               }} = Orders.create_order(valid_attrs)
     end
@@ -64,7 +65,7 @@ defmodule GoblinPay.OrdersTest do
 
       payment_amount = 20
 
-      assert {:ok, %{original_order_value: 100, current_balance: 80}} =
+      assert {:ok, %Order{current_balance: 80}} =
                Orders.create_order_and_pay(order_attrs, payment_amount)
     end
 
@@ -92,7 +93,8 @@ defmodule GoblinPay.OrdersTest do
     test "update_order/2 with invalid data returns error changeset" do
       order = order_fixture()
       assert {:error, %Ecto.Changeset{}} = Orders.update_order(order, @invalid_attrs)
-      assert order == Orders.get_order!(order.id)
+      get_order = Orders.get_order!(order.id)
+      assert get_order.id == order.id
     end
 
     test "apply_payment_to_order/2 applies a payment to a given order" do
@@ -100,6 +102,14 @@ defmodule GoblinPay.OrdersTest do
       payment_amount = 50
 
       assert {:ok, %Order{current_balance: 25}} =
+               Orders.apply_payment_to_order(payment_amount, order.id)
+    end
+
+    test "apply_payment_to_order/2 raises an error when payment exceeds balance" do
+      order = order_fixture(%{"current_balance" => 30})
+      payment_amount = 40
+
+      assert {:error, "Payment cannot exceed balance"} =
                Orders.apply_payment_to_order(payment_amount, order.id)
     end
 

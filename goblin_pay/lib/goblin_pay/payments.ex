@@ -42,10 +42,10 @@ defmodule GoblinPay.Payments do
 
   ## Examples
 
-      iex> create_payment(%{field: value})
+      iex> create_payment(%{amount_applied: 20})
       {:ok, %Payment{}}
 
-      iex> create_payment(%{field: bad_value})
+      iex> create_payment(%{amount_applied: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
@@ -60,7 +60,7 @@ defmodule GoblinPay.Payments do
 
   ## Examples
 
-      iex> update_payment(payment, %{field: new_value})
+      iex> update_payment(payment, %{amount_applied: 20})
       {:ok, %Payment{}}
 
       iex> update_payment(payment, %{field: bad_value})
