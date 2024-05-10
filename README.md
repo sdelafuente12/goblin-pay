@@ -19,7 +19,7 @@ New functionality includes:
 Other more basic context functions added: 
 
 Orders:
-`list_orders/0`, `update_order/1`, `delete_order/1`, and `change_order/1`
+`list_orders/0`, `update_order/2`, `delete_order/1`, and `change_order/1`
 
 Payments:
 `list_payments/0`, `get_payment!/1`, `create_payment/1`, `update_payment/2`, `delete_payment/1` and `change_payment/1`
